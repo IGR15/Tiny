@@ -1,20 +1,27 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public bool FacingLeft { get { return facingLeft; } set { facingLeft = value; } }
+
     [SerializeField] private float moveSpeed = 1f;
+
     private PlayerControls playerControls;
     private Vector2 movement;
     private Rigidbody2D rb;
     private Animator myAnimator;
-    private SpriteRenderer mySpriteRenderer;
+    private SpriteRenderer mySpriteRender;
+
+    private bool facingLeft = false;
 
     private void Awake()
     {
         playerControls = new PlayerControls();
         rb = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
-        mySpriteRenderer = GetComponent<SpriteRenderer>();
+        mySpriteRender = GetComponent<SpriteRenderer>();
     }
 
     private void OnEnable()
@@ -29,8 +36,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
         AdjustPlayerFacingDirection();
+        Move();
     }
 
     private void PlayerInput()
@@ -49,14 +56,17 @@ public class PlayerController : MonoBehaviour
     private void AdjustPlayerFacingDirection()
     {
         Vector3 mousePos = Input.mousePosition;
-       Vector3 playerScreenPoint=Camera.main.WorldToScreenPoint(transform.position);
-       if(mousePos.x < playerScreenPoint.x)
-       {
-           mySpriteRenderer.flipX = true;
-       }
-       else
-       {
-           mySpriteRenderer.flipX = false;
-       }
+        Vector3 playerScreenPoint = Camera.main.WorldToScreenPoint(transform.position);
+
+        if (mousePos.x < playerScreenPoint.x)
+        {
+            mySpriteRender.flipX = true;
+            FacingLeft = true;
+        }
+        else
+        {
+            mySpriteRender.flipX = false;
+            FacingLeft = false;
+        }
     }
 }
